@@ -27,6 +27,8 @@ Transaction.hasMany(TransactionItem, { foreignKey: 'transaction_id' });
 TransactionItem.belongsTo(Transaction, { foreignKey: 'transaction_id' });
 Product.hasMany(TransactionItem, { foreignKey: 'product_id' });
 TransactionItem.belongsTo(Product, { foreignKey: 'product_id' });
+CartItem.belongsTo(Product, { foreignKey: 'product_id', as: 'Product' });
+Product.hasMany(CartItem, { foreignKey: 'product_id', as: 'CartItems' });
 
 // Export the db object
 const db = {

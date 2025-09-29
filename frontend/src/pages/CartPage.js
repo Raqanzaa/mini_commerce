@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useCart } from '../context/cartContext';
 import { useAuth } from '../context/authContext';
 import { checkout } from '../api/apiService';
@@ -29,7 +29,9 @@ const CartPage = () => {
   if (cartItems.length === 0) return <p>Your cart is empty.</p>;
 
   const totalPrice = cartItems.reduce((total, item) => {
-    return total + item.quantity * item.Product.price;
+    const price = Number(item?.product?.price) || 0;
+    const quantity = Number(item?.quantity) || 0;
+    return total + price * quantity;
   }, 0);
 
   return (
@@ -37,13 +39,13 @@ const CartPage = () => {
       <h2>Your Shopping Cart</h2>
       {cartItems.map(item => (
         <div key={item.id} className="cart-item">
-          <img src={`${API_URL}${item.Product.imageUrl}`} alt={item.Product.name} />
+          <img src={`${API_URL}${item.product.image}`} alt={item.product.name} />
           <div>
-            <h3>{item.Product.name}</h3>
+            <h3>{item.product.name}</h3>
             <p>Quantity: {item.quantity}</p>
-            <p>Price: ${item.Product.price}</p>
+            <p>Price: ${item.product.price}</p>
           </div>
-          <button onClick={() => removeFromCart(item.Product.id)}>Remove</button>
+          <button onClick={() => removeFromCart(item.product.id)}>Remove</button>
         </div>
       ))}
       <div className="cart-summary">

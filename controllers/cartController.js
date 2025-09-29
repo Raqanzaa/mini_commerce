@@ -40,23 +40,15 @@ export const addToCart = async (req, res) => {
  */
 export const getCart = async (req, res) => {
   try {
-    const userId = req.user.id;
+    // controllers/cartController.js
+const items = await CartItem.findAll({
+  where: { user_id: req.user.id },
+  include: [{ model: Product, as: 'Product' }] // alias
+});
 
-    const cartItems = await CartItem.findAll({
-      where: { user_id: userId },
-      include: [
-        {
-          model: Product,
-          as: 'Product', // must match the alias you used in associations
-          attributes: ['id', 'name', 'price', 'imageUrl'] // limit fields if you like
-        }
-      ]
-    });
-
-    res.json(cartItems);
+    res.json(items);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ error: err.message });
   }
 };
 
